@@ -1,0 +1,81 @@
+{% load static %}
+{% load socialaccount %}
+{% providers_media_js %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center align-items-center" style="height:100vh;">
+            <div class="col-md-6">
+                <div class="wrap-login100 p-5">
+                    <form action="" class="login100-form validate-form" method="post">
+                        {% csrf_token %}
+                        <h3 class="login100-form-title mb-4">
+                            Sign Up
+                        </h3>
+                        <div class="form-group">
+                            <label for="username" class="txt1">Username</label>
+                            <input class="input100 form-control" type="text" name="username" id="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="first_name" class="txt1">First Name</label>
+                            <input class="input100 form-control" type="text" name="first_name" id="first_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name" class="txt1">Last Name</label>
+                            <input class="input100 form-control" type="text" name="last_name" id="last_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="txt1">Email</label>
+                            <input class="input100 form-control" type="text" name="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password1" class="txt1">Password</label>
+                            <input class="input100 form-control" type="password" name="password1" id="password1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password2" class="txt1">Re-Enter Password</label>
+                            <input class="input100 form-control" type="password" name="password2" id="password2" required>
+                        </div>
+
+                        {{ form.errors }}
+
+                        <div class="container-login100-form-btn m-t-17">
+                            <button class="login100-form-btn btn btn-primary">
+                                Sign Up
+                            </button>
+                        </div>
+
+                        <div class="w-full text-center p-t-55">
+                            <span class="txt2">Already have an account?</span>
+                            <a href="{% url 'login' %}" class="txt2 bo1">Login</a>
+                        </div>
+                        <div class="w-full text-center p-t-55">
+                            <span class="txt2">Back to the Homepage</span>
+                            <a href="{% url 'index' %}" class="txt2 bo1">Home</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dropDownSelect1"></div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+{%endblock%}
+{% comment %} b69hC6_brX_R4qL  {% endcomment %}
+{% comment %} kc@123lr {% endcomment %}

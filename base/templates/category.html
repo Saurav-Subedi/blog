@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="my-4">Blog</h1>
+            <div class="row">
+                <div class="col-md-12 mt-3">
+                    <h1>{{ catData.name }}</h1>
+                </div>
+            </div>
+            <div class="card mb-4">
+                {% if postData %}
+                    {% for post in postData %}
+                        <div class="card mb-4">
+                            <div class="media">
+                                <img class="rounded-circle author-img mr-3" src="{{ post.author.profile.profile_pic.url }}" style="max-width: 100px; max-height: 100px;" alt="{{ post.author.username }}">
+                                <div class="media-body">
+                                    <h3><a href="{% url 'posts-by-author' username=post.author.username %}">View Posts by {{ post.author.username }}</a></h3>
+                                    <div class="article-metadata">
+                                        <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <img class="embed-responsive-item card-img-top" src="{{ post.post_pic.url }}" alt="{{ post.name }}">
+                            </div>
+                            <div class="card-body">
+                                <h2 class="card-title">{{ post.name }}</h2>
+
+                                <div class="post-description" id="post_description_{{ post.pk }}">
+                                    {{ post.limit_description|safe }}
+                                </div>
+
+                                <a href="{% url 'post-detail' pk=post.pk %}" class="btn btn-primary">Read More &rarr;</a>
+                            </div>
+                            <div class="card-footer text-muted">
+                                {{ post.date_posted|date:"F d, Y" }}
+                            </div>
+                        </div>
+
+                        <script>
+                            CKEDITOR.replace('post_description_{{ post.pk }}', {
+                                readOnly: true, 
+                                removePlugins: 'toolbar,resize', 
+                            });
+                        </script>
+                    {% endfor %}
+                </div>
+                <div>
+                    {% if previous_item %}
+                        <a href="{% url 'item_detail' previous_item.id %}" class="btn btn-secondary">Previous: {{ previous_item.title }}</a>
+                    {% endif %}
+
+                    {% if next_item %}
+                        <a href="{% url 'item_detail' next_item.id %}" class="btn btn-secondary float-right">Next: {{ next_item.title }}</a>
+                    {% endif %}
+                </div>
+                {% else %}
+                    <div class="alert alert-warning" role="alert">
+                        No posts available in this category.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

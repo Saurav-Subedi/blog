@@ -1,0 +1,51 @@
+/* Navbar links style */
+.nav-link {
+  background-color: #0c6a9d;
+  border: none;
+  border-radius: 20px;
+  color: #fff;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+  background-color: #07416a;
+}
+
+/* Navbar background color */
+.navbar-dark {
+  background-color: #0c6a9d;
+}
+
+/* Hide button class */
+.hide-button {
+  display: none;
+}
+
+/* Navbar text alignment */
+.hide-button-text {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  line-height: 40px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.hide-button-text:hover {
+  background-color: #0e1f2b;
+}
+
+/* Adjust the layout of the search form and button */
+#search-form {
+  display: flex;
+  align-items: center;
+}
+
+#search-input {
+  flex: 1;
+  margin-right: 10px;
+}

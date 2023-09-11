@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-section">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">Create Blog Post</legend>
+                        <div class="form-group">
+                            <label for="{{ form.name.id_for_label }}">Title:</label>
+                            <input type="text" class="form-control" id="{{ form.name.id_for_label }}" name="{{ form.name.name }}" value="{{ form.name.value }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.category.id_for_label }}">Category:</label>
+                            <select class="form-control" id="{{ form.category.id_for_label }}" name="{{ form.category.name }}">
+                                <option value="" selected disabled>Select a category</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.description.id_for_label }}">Content:</label>
+                            <textarea class="form-control" id="id_of_content_textarea" name="{{ form.description.name }}" rows="6" cols="60">{{ form.description.value }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.post_pic.id_for_label }}">Image:</label>
+                            <input type="file" class="form-control-file" id="{{ form.post_pic.id_for_label }}" name="{{ form.post_pic.name }}">
+                        </div>
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-outline-info" type="submit">Create Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include CKEditor JavaScript files from CDN -->
+<script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+
+<!-- Initialize CKEditor on the textarea element -->
+<script>
+    CKEDITOR.replace('id_of_content_textarea');
+</script>
+{% endblock content %}

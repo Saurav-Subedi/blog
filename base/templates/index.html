@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="my-4">Blog</h1>
+
+            {% for post in posts %}
+            <div class="card mb-4">
+                <div class="embed-responsive embed-responsive-16by9">
+                    <img class="embed-responsive-item card-img-top" src="{{ post.post_pic.url }}" alt="{{ post.name }}">
+                </div>
+                <div class="card-body">
+                    <h2 class="card-title">{{ post.name }}</h2>
+                    
+                    <div class="post-description">
+                        {{ post.limit_description|safe }}
+                    </div>
+                    
+                    <a href="{% url 'post-detail' pk=post.pk %}" class="btn btn-primary">Read More &rarr;</a>
+                </div>
+                <div class="card-footer text-muted">
+                    <a href="{% url 'posts-by-author' username=post.author.username %}">View Posts by {{ post.author.username }}</a>
+                    <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

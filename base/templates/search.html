@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="my-4">Blog</h1>
+
+      {% if results %}
+        {% for result in results %}
+        <div class="card mb-4">
+          <img class="card-img-top" src="{{ result.post_pic.url }}" alt="{{ result.name }}">
+          <div class="card-body">
+            <h2 class="card-title">{{ result.name }}</h2>
+            
+            <p class="card-text">{{ result.description|truncatewords:55 |safe}}</p>
+            <a href="{% url 'post-detail' pk=result.pk %}" class="btn btn-primary">Read More &rarr;</a>
+          </div>
+          <div class="card-footer text-muted">
+            {{ result.date_posted|date:"F d, Y" }}
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p>No matching results found.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

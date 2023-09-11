@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body text-center">
+          <img class="rounded-circle mb-3" src="{{ user.profile.profile_pic.url }}" width="150" height="150" alt="Profile Picture">
+          <h2 class="card-title">{{ user.username }}</h2>
+          <p class="card-text text-muted">{{ user.email }}</p>
+        </div>
+      </div>
+      <div class="card mt-4">
+        <div class="card-body">
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class="form-group">
+              <legend class="border-bottom mb-4">Edit Profile</legend>
+              {{ u_form.as_p }}
+              {{ p_form.as_p }}
+            </fieldset>
+            <div class="form-group">
+              <button class="btn btn-info btn-block" type="submit">Update Profile</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

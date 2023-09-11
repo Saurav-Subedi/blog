@@ -1,0 +1,65 @@
+{% load static %}
+{% load socialaccount %}
+{% providers_media_js %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
+    {% comment %} <link rel="stylesheet" type="text/css" href="{% static '/css/loginn.css' %}"> {% endcomment %}
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center align-items-center" style="height:100vh;">
+            <div class="col-md-6">
+                <div class="wrap-login100 p-5">
+                    <form action="" class="login100-form validate-form" method="post">
+                        {% csrf_token %}
+                        <h3 class="login100-form-title mb-4">
+                            Sign In With
+                        </h3>
+                        <div class="form-group">
+                            <label for="username" class="txt1">Username</label>
+                            <input class="input100 form-control" type="text" name="username" id="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="txt1">Password</label>
+                            <input class="input100 form-control" type="password" name="password" id="password" required>
+                            <a href="{% url 'password_reset' %}" class="txt2 bo1 mt-2">Forgot password?</a>
+                        </div>
+                        <div class="form-group">
+                            <button class="login100-form-btn btn btn-primary">
+                                Sign In
+                            </button>
+                        </div>
+                        {% for message in messages %}
+                        <h3 id='messages' class="text-danger">{{ message }}</h3>
+                        {% endfor %}
+                        <div class="form-group">
+                            <span class="txt2">Not a member?</span>
+                            <a href="{% url 'register' %}" class="txt2 bo1">Sign up now</a>
+                        </div>
+                        <div class="form-group">
+                            <span class="txt2">Back to the Homepage</span>
+                            <a href="{% url 'index' %}" class="txt2 bo1">Home</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+{% endblock %}
