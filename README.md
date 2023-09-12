@@ -124,9 +124,3 @@ If you'd like to contribute to this project, please follow these guidelines:
 - Make your changes and commit them.
 - Push your changes to your fork.
 - Submit a pull request to the main repository.
-
-### License
-
-[License information goes here, e.g., MIT License]
-
----
