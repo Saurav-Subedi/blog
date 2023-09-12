@@ -1,4 +1,3 @@
-/* Navbar links style */
 .nav-link {
   background-color: #0c6a9d;
   border: none;
@@ -13,17 +12,13 @@
   background-color: #07416a;
 }
 
-/* Navbar background color */
 .navbar-dark {
   background-color: #0c6a9d;
 }
 
-/* Hide button class */
 .hide-button {
   display: none;
 }
-
-/* Navbar text alignment */
 .hide-button-text {
   background-color: transparent;
   border: none;
@@ -39,7 +34,6 @@
   background-color: #0e1f2b;
 }
 
-/* Adjust the layout of the search form and button */
 #search-form {
   display: flex;
   align-items: center;
@@ -49,3 +43,9 @@
   flex: 1;
   margin-right: 10px;
 }
+body {
+  font-family: 'Montserrat Alternates', sans-serif;
+  font-family: 'Mulish', sans-serif;
+  font-family: 'Sono', sans-serif;
+}
+

@@ -99,8 +99,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        category_id = self.request.POST.get('category')
-        if category_id:
+        if category_id := self.request.POST.get('category'):
             category = get_object_or_404(Category, id=category_id)
             form.instance.category = category
         return super().form_valid(form)
@@ -112,8 +111,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     
     def form_valid(self, form):
         form.instance.author = self.request.user
-        category_id = self.request.POST.get('category')
-        if category_id:
+        if category_id := self.request.POST.get('category'):
             category = get_object_or_404(Category, id=category_id)
             form.instance.category = category
 
@@ -131,9 +129,7 @@ class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         post = self.get_object()
-        if self.request.user == post.author:
-            return True
-        return False
+        return self.request.user == post.author
     def get_success_url(self):
         return reverse_lazy('index')
 
@@ -157,9 +153,9 @@ def register(request):
             user = form.save()
             username = form.cleaned_data.get('username')
             Profile.objects.create(user=user)
-            messages.success(request, 'Account was created for ' + username)
+            messages.success(request, f'Account was created for {username}')
             return redirect('login')
-        
+
     context = {'form': form}
     return render(request, 'register.html', context)
 
@@ -188,14 +184,14 @@ def profile_view(request):
     try:
         p_form = ProfileUpdateForm(instance=request.user.profile)
     except Profile.DoesNotExist:
-        p_form = ProfileUpdateForm()  
+        p_form = ProfileUpdateForm()
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            messages.success(request, f'Your account has been updated!')
+            messages.success(request, 'Your account has been updated!')
             return redirect('index')
     else:
         u_form = UserUpdateForm(instance=request.user)
