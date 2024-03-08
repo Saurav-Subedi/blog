@@ -2,7 +2,10 @@ from typing import Self
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render,redirect, get_object_or_404
-from .forms import CreateUserForm, PostCreateForm,ProfileUpdateForm,UserUpdateForm,UserUpdateForm, ProfileUpdateForm
+from django.views import View
+
+from my_blog import settings
+from .forms import CreateUserForm, OTPVerificationForm, PostCreateForm,ProfileUpdateForm, RegistrationForm,UserUpdateForm,UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from .models import *
 from django.views.generic import ListView, DetailView,CreateView,UpdateView,DeleteView
@@ -18,6 +21,9 @@ from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.db.models import Q
 from django.urls import reverse_lazy
+from .forms import RegistrationForm, LoginForm
+from django.core.mail import send_mail
+
 
 
 def posts_by_author(request, username):
@@ -144,40 +150,136 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     def test_func(self):
         return True
 
+#
+class LogInView(View):
+    def get(self, request):
+        form = LoginForm(request)
+        return render(request, 'login.html', {'form': form})
 
-def register(request):
-    form = CreateUserForm()
-    if request.method == 'POST':
-        form = CreateUserForm(request.POST)
+    def post(self, request):
+        form = LoginForm(request, request.POST)
         if form.is_valid():
-            user = form.save()
-            username = form.cleaned_data.get('username')
-            Profile.objects.create(user=user)
-            messages.success(request, f'Account was created for {username}')
-            return redirect('login')
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
 
-    context = {'form': form}
-    return render(request, 'register.html', context)
+            user = authenticate(username=username, password=password)
 
+            if user is not None:
+                try:
+                    otp = OTP.objects.get(user=user)
+                except OTP.DoesNotExist:
+                    otp = None
 
-def userlogin(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request,username = username, password = password)
-        if user is not None:
-            login(request,user)
-            return redirect('index')
-
+                if otp and otp.is_verified:
+                    login(request, user)
+                    next_url = request.GET.get('next')
+                    if next_url:
+                        return redirect(next_url)
+                    else:
+                        return redirect('home') 
+                elif otp and not otp.is_verified:
+                    messages.info(request, 'Your account isn\'t verified with OTP. Please check your email.')
+                    return redirect('login')
+                else:
+                    messages.info(request, 'Your account isn\'t verified. Please check your email.')
+                    return redirect('login')
+            else:
+                messages.info(request, 'Invalid username or password.')
+                return redirect('app:login')
         else:
-            messages.info(request,'username or password incorrect.')
-    context={}
-    return render(request, 'login.html',context)
+             return render(request, 'login.html', {'form': form})
+
+from django.contrib.auth import logout
 
 
-def userlogout(request):
-    logout(request)
-    return redirect('index')
+class LogOutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('index')
+    
+class RegistrationView(View):
+    def get(self, request):
+        form = RegistrationForm()
+        return render(request, 'register.html', {'form': form})
+
+    def post(self, request):
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+
+            # Check if an account with the same email already exists
+            if User.objects.filter(email=email).exists():
+                messages.error(request, "An account with this email address already exists.")
+                return redirect('customer_registration')
+
+            new_user = form.save()
+
+            otp = OTP.objects.create(user=new_user)
+            otp.generate_otp()
+            otp.save()
+            send_otp_email(new_user.email, otp.otp_code)
+            login(request, new_user)
+
+            messages.success(request, "Your Account Created Successfully. Check your email for OTP.")
+            return redirect('otp_verification')
+        return render(request, 'register.html', {'form': form})
+
+
+class OTPVerificationView(View):
+    def get(self, request):
+        form = OTPVerificationForm()
+        return render(request, 'otp_verification.html', {'form': form})
+
+    def post(self, request):
+        form = OTPVerificationForm(request.POST)
+        if form.is_valid():
+            otp_code = form.cleaned_data['otp_code']
+            user = request.user  # Assuming the user is logged in
+            otp = OTP.objects.get(user=user)
+
+            if otp.is_valid(otp_code):
+                otp.is_verified = True
+                otp.save()
+                messages.success(request, "OTP Verified successfully.")
+                return redirect('registration_success')
+            else:
+                messages.error(request, "Invalid OTP. Please try again.")
+        return render(request, 'otp_verification.html', {'form': form})
+
+
+def send_otp_email(email, otp_code):
+    subject = "OTP Verification Code"
+    message = f"Your OTP verification code is: {otp_code}"
+
+    from_email = settings.EMAIL_HOST_USER
+    recipient_list = [email]
+
+    send_mail(subject=subject, message=message, from_email=from_email, recipient_list=recipient_list)
+
+
+
+def registration_success(request):
+    redirect_to = request.GET.get('next', '/')
+
+    if request.user.is_authenticated:
+        return redirect(redirect_to)
+
+    if request.method == 'POST':
+
+        username = request.POST['username'] 
+        password = request.POST['password'] 
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect(redirect_to)
+        else:
+            pass
+
+    return render(request, 'registration_success.html')
+
+
 
 @login_required(login_url='login')
 def profile_view(request):
@@ -202,6 +304,8 @@ def profile_view(request):
     }
 
     return render(request, 'profile.html', context)
+
+
 
 
 

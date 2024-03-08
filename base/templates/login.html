@@ -1,73 +1,46 @@
+{% extends 'base.html' %}
 {% load static %}
-{% load socialaccount %}
-{% providers_media_js %}
 {% block content %}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Login</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
-  
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates&family=Mulish&family=Sono&display=swap" rel="stylesheet">  
-    <style>
-        body {
-            font-family: 'Montserrat Alternates', sans-serif;
-            font-family: 'Sono', sans-serif;
-          }
-          
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="row justify-content-center align-items-center" style="height:100vh;">
-            <div class="col-md-6">
-                <div class="wrap-login100 p-5">
-                    <form action="" class="login100-form validate-form" method="post">
-                        {% csrf_token %}
-                        <h3 class="login100-form-title mb-4">
-                            Sign In With
-                        </h3>
-                        <div class="form-group">
-                            <label for="username" class="txt1">Username</label>
-                            <input class="input100 form-control" type="text" name="username" id="username" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="txt1">Password</label>
-                            <input class="input100 form-control" type="password" name="password" id="password" required>
-                            <a href="{% url 'password_reset' %}" class="txt2 bo1 mt-2">Forgot password?</a>
-                        </div>
-                        <div class="form-group">
-                            <button class="login100-form-btn btn btn-primary">
-                                Sign In
-                            </button>
-                        </div>
-                        {% for message in messages %}
-                        <h3 id='messages' class="text-danger">{{ message }}</h3>
-                        {% endfor %}
-                        <div class="form-group">
-                            <span class="txt2">Not a member?</span>
-                            <a href="{% url 'register' %}" class="txt2 bo1">Sign up now</a>
-                        </div>
-                        <div class="form-group">
-                            <span class="txt2">Back to the Homepage</span>
-                            <a href="{% url 'index' %}" class="txt2 bo1">Home</a>
-                        </div>
-                    </form>
+<div>
+    <div class="hello"> 
+        <div class="form-box login">
+            <h3 >Login on <span class="text-warning">MyBlogs </span></h3>
+            <hr  style="height: 3px;">
+            {% if messages %}
+			{% for messages in messages %}
+			<div><strong>{{messages}}</strong> 
+				<button type="button" aria-label="Close">&times;</button>
+			</div>
+			{% endfor %}
+		{% endif %}
+            <form action="" method="POST" novalidate >
+                {% csrf_token %}
+                {% for fm in form %}
+                <div class="input-box">
+                    {{fm.label_tag}} {{fm}}
+                    <small class="text-danger">
+                        {{fm.errors|striptags}}
+                    </small><br>
                 </div>
-            </div>
+                {% endfor %}
+                <small class="remember-forgot">
+                    {% comment %} <a href="{% url '' %}">Forgot Password ?</a> {% endcomment %}
+                </small><br>
+                <input type="submit"  class="register-1ink" value="Login">
+                <br>
+                <div class="login-register">
+                    <small  class="register-1ink">New to LiveFit ? <a href="{% url 'register' %}" class="text-danger">Create an
+                            Account</a>
+                    </small>
+                </div>
+                {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                <p>{{error}}</p>
+                {% endfor %}
+
+                {% endif %}
+            </form>
         </div>
     </div>
-    <!-- Add Bootstrap JS and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
-
+</div>
 {% endblock %}

@@ -1,3 +1,4 @@
+import random
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -34,7 +35,7 @@ class Post(models.Model):
         verbose_name_plural = 'Post'
 
     def limit_description(self):
-        return self.description[:200] + '...'
+        return f'{self.description[:200]}...'
     
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -82,4 +83,27 @@ class ContactInquiry(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Verification(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	token = models.CharField(max_length=150)
+	verify = models.BooleanField(default=False)
+    
+
+class OTP(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    otp_code = models.CharField(max_length=6, blank=True, null=True)
+    is_verified = models.BooleanField(default=False)
+    
+    def generate_otp(self):
+        self.otp_code = str(random.randint(100000, 999999))
+    
+    def is_valid(self, otp):
+        return self.otp_code == otp
+
+
+class ResetPasswordToken(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=32)
 

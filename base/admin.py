@@ -4,9 +4,6 @@ from . models import *
 from .models import Question, Choice
 from django.utils.html import format_html
 
-# Register your models here.
-
-# admin.site.register(Post)
 admin.site.register(Profile) 
 admin.site.site_header = " Admin"
 admin.site.site_title = " Admin Area"
@@ -50,3 +47,9 @@ class AdminCategory(admin.ModelAdmin):
     list_display=['category','name','slug','description','date_posted','author']
     prepopulated_fields={'slug':('name',)}
     search_fields=['name','slug']
+
+class OTPAdmin(admin.ModelAdmin):
+    list_display = ('user', 'otp_code', 'is_verified')
+    list_filter = ('is_verified',)
+    search_fields = ('user__username', 'user__email')
+admin.site.register(OTP, OTPAdmin)

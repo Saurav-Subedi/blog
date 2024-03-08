@@ -1,7 +1,7 @@
 from django.urls import include, path
 from . import views
 from django.contrib.auth import views as auth_views
-from .views import PostListView, PostDetailView,PostCreateView,PostUpdateView,PostDeleteView
+from .views import RegistrationView, LogOutView, OTPVerificationView, PostListView, PostDetailView,PostCreateView,PostUpdateView,PostDeleteView
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -20,9 +20,11 @@ urlpatterns = [
     path('post/<int:pk>/delete', PostDeleteView.as_view(), name='post-delete'),
     path('author/<str:username>/', views.posts_by_author, name='posts-by-author'),
 
-    path('register/', views.register, name='register'),
-    path('login/', views.userlogin, name='login'),
-    path('logout/', views.userlogout, name='logout'),
+    path('register/', views.RegistrationView.as_view(),name='register'),
+    path('login/', views.LogInView.as_view(), name='login'),
+    path('logout/', LogOutView.as_view(), name='logout'),
+    path('registration-success/', views.registration_success, name='registration_success'),
+    path('otp-verification/', OTPVerificationView.as_view(), name='otp_verification'),
     path('about/', views.about, name='about'),
     path('polls/', views.polls, name='indexx'),
     path('<int:question_id>/', views.detail, name='detail'),
