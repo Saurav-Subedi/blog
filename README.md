@@ -1,7 +1,7 @@
 # Django Blog Posting Website
 
-Welcome to the Django Blog Posting Website!
-This web application allows users to create, read, update, and delete blog posts after signing up for an account.
+Welcome to the  MyBlog  Website!
+This web application allows users to create, read, update, and delete blog posts.
 
 ## Table of Contents
 
